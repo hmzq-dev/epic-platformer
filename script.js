@@ -1,26 +1,34 @@
 //Variable Declarations
+let canvas = null;
+const windowMargin = 100;
+
+let score;
+let cloudImage;
 let groundImage;
-let platformImage;
 let playerImage;
-let skyImage;
 let spikeImage;
 
 
 //Canvas Methods
 function preload() {
+  cloudImage = loadImage("sprites/cloud.png");
   groundImage = loadImage("sprites/ground.png");
-  platformImage = loadImage("sprites/platform.png");
   playerImage = loadImage("sprites/player.png");
-  skyImage = loadImage("sprites/sky.png");
   spikeImage = loadImage("sprites/spike.png");
 }
 
 
 function setup() {
-  createCanvas(800, 400);
+  canvas = createCanvas(windowWidth -windowMargin, windowHeight -windowMargin);
+  canvas.parent("screen");
 }
 
 
 function draw() {
-  background("black")
+  background("lightblue");
+}
+
+
+function windowResized() {
+  resizeCanvas(windowWidth -windowMargin, windowHeight -windowMargin);
 }
