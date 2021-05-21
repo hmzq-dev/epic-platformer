@@ -1,6 +1,10 @@
 "use strict"
 
 //Variable Declarations
+let speed = 10;
+const gravity = 5;
+let currentGravity = gravity;
+
 let canvas = null;
 let score = 0;
 
@@ -33,11 +37,10 @@ function setup() {
   
   groundGroup = new Group();
   ground = createSprite(0, 300, width, groundHeight);
+  ground.setDefaultCollider();
   groundGroup.add(ground);
   
   player = createSprite(100, 100, 30, 30);
-  player.velocity.x = 2;
-  player.velocity.y = 5;
 }
 
 
@@ -46,16 +49,21 @@ function draw() {
   drawSprites();
   generateTerrain();
   
-  camera.position.x += player.velocity.x;
+  //speed += 0.1;
+  player.position.x = player.position.x + speed;
+  player.position.y = player.position.y + currentGravity;
+  camera.position.x = player.position.x + width/4;
   
-  player.overlap(groundGroup, () => player.velocity.y = 0);
-  
-  player.velocity.x += 0.05;
+  if (player.overlap(groundGroup)) {
+    currentGravity = 0;
+  } else {
+    currentGravity = gravity;
+  }
   
   //Update and display score
   textSize(30);
   score++;
-  text(`Score: ${score}`, camera.position.x, camera.position.y - 170);
+  text(`Score: ${score}`, camera.position.x - speed - 400, camera.position.y - 170);
 }
 
 
@@ -64,5 +72,6 @@ function generateTerrain() {
   lastGround = groundArray[groundArray.length - 1];
   
   ground = createSprite(lastGround.position.x + width, 300, width, groundHeight);
+  ground.setDefaultCollider();
   groundGroup.add(ground);
 }
