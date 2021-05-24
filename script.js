@@ -4,6 +4,9 @@
 let speed = 10;
 const gravity = 5;
 let currentGravity = gravity;
+let playerIsJumping = false;
+let jumpDuration = 30; //Frames
+let currentjumpPosition = -1;
 
 let canvas = null;
 let score = 0;
@@ -49,20 +52,29 @@ function draw() {
   drawSprites();
   generateTerrain();
   
-  //speed += 0.1;
+  speed += 0.08;
   player.position.x = player.position.x + speed;
   player.position.y = player.position.y + currentGravity;
   camera.position.x = player.position.x + width/4;
   
   if (player.overlap(groundGroup)) {
-    currentGravity = 0;
-  } else {
+    //currentGravity = 0;
+    jump();
+  } else if (!playerIsJumping) {
     currentGravity = gravity;
+  }
+  
+  if (playerIsJumping) {
+    currentjumpPosition += 1;
+    if (currentjumpPosition === jumpDuration) {
+      currentjumpPosition = -1;
+      playerIsJumping = false;
+    }
   }
   
   //Update and display score
   textSize(30);
-  score++;
+  score += Math.floor(speed);
   text(`Score: ${score}`, camera.position.x - speed - 400, camera.position.y - 170);
 }
 
@@ -74,4 +86,11 @@ function generateTerrain() {
   ground = createSprite(lastGround.position.x + width, 300, width, groundHeight);
   ground.setDefaultCollider();
   groundGroup.add(ground);
+}
+
+
+function jump() {
+  currentGravity = 0 - gravity;
+  playerIsJumping = true;
+  currentjumpPosition = 0;
 }
